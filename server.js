@@ -11,10 +11,10 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const db = new Database("casino.db");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.set("trust proxy", 1);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: "entrerios-secret",
   resave: false,
@@ -36,12 +36,11 @@ db.prepare(`
   )
 `).run();
 
+// Forzar creación del admin en cada arranque (para evitar problemas en Render)
 db.prepare("DELETE FROM users WHERE username = 'admin'").run();
 const hash = bcrypt.hashSync("cambiar123", 10);
 db.prepare("INSERT INTO users (username, password, isAdmin, chips) VALUES (?, ?, 1, 0)")
   .run("admin", hash);
-
-}
 
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
