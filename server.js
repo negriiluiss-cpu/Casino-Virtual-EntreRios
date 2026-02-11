@@ -13,10 +13,16 @@ const db = new Database("casino.db");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set("trust proxy", 1);
+
 app.use(session({
   secret: "entrerios-secret",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    sameSite: "lax"
+  }
 }));
 app.use(express.static(path.join(__dirname, "public")));
 
