@@ -11,7 +11,14 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const db = new Database("casino.db");
 
+// Necesario para cookies/sesiones en Render
 app.set("trust proxy", 1);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,11 +43,11 @@ db.prepare(`
   )
 `).run();
 
-// Forzar creación del admin en cada arranque (para evitar problemas en Render)
+// Forzar creación del admin en cada arranque (temporal para pruebas)
 db.prepare("DELETE FROM users WHERE username = 'admin'").run();
-const hash = bcrypt.hashSync("cambiar123", 10);
+const adminHash = bcrypt.hashSync("cambiar123", 10);
 db.prepare("INSERT INTO users (username, password, isAdmin, chips) VALUES (?, ?, 1, 0)")
-  .run("admin", hash);
+  .run("admin", adminHash);
 
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
