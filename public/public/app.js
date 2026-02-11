@@ -1,43 +1,130 @@
+let currentTheme = "Clásico";
+
+const themes = [
+  "Clásico", "Egipcio", "Piratas", "Espacio", "Selva", "Frutas", "Diamantes",
+  "Dragones", "Mitología", "Faraones", "Vaqueros", "Vikingos", "Samuráis",
+  "Zombies", "Fantasía", "Cartas", "Tesoros", "Robots", "Dioses", "Retro"
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+  const themeSelect = document.getElementById("theme");
+  themes.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.innerText = t;
+    themeSelect.appendChild(opt);
+  });
+});
+
 async function login() {
-  const r = await fetch("/login", {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!username || !password) {
+    alert("Ingresá usuario y contraseña");
+    return;
+  }
+
+  const res = await fetch("/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: u.value, password: p.value })
+    credentials: "include",
+    body: JSON.stringify({ username, password })
   });
-  const d = await r.json();
-  if (!d.ok) return err.textContent = "Login incorrecto";
-  login.hidden = true;
-  app.hidden = false;
-  user.textContent = u.value;
-  chips.textContent = d.chips;
-  if (d.isAdmin) admin.hidden = false;
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    alert("Usuario o contraseña incorrectos");
+    return;
+  }
+
+  document.getElementById("login").style.display = "none";
+  document.getElementById("game").style.display = "block";
+  document.getElementById("chips").innerText = data.chips;
+
+  const adminPanel = document.getElementById("admin");
+  adminPanel.style.display = data.isAdmin ? "block" : "none";
 }
 
 async function spin() {
-  const r = await fetch("/spin", {
+  const bet = parseInt(document.getElementById("bet").value, 10);
+  if (!bet || bet <= 0) {
+    alert("Ingresá una apuesta válida");
+    return;
+  }
+
+  const res = await fetch("/spin", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ bet: Number(bet.value) })
+    credentials: "include",
+    body: JSON.stringify({ bet })
   });
-  const d = await r.json();
-  result.textContent = d.win ? "🎉 Ganaste!" : "😢 Perdiste";
-  chips.textContent = d.chips;
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    alert(data.msg || "Error al girar");
+    return;
+  }
+
+  const result = data.win ? "🎉 GANASTE" : "😢 PERDISTE";
+  document.getElementById("result").innerText = result + " (" + currentTheme + ")";
+  
+  const chipsEl = document.getElementById("chips");
+  chipsEl.innerText = parseInt(chipsEl.innerText, 10) + data.delta;
 }
 
 async function createUser() {
-  await fetch("/admin/create-user", {
+  const username = document.getElementById("newUser").value.trim();
+  const password = document.getElementById("newPass").value.trim();
+
+  if (!username || !password) {
+    alert("Usuario y contraseña requeridos");
+    return;
+  }
+
+  const res = await fetch("/admin/create-user", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: newu.value, password: newp.value })
+    credentials: "include",
+    body: JSON.stringify({ username, password })
   });
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    alert("Error al crear usuario");
+    return;
+  }
+
   alert("Usuario creado");
+  document.getElementById("newUser").value = "";
+  document.getElementById("newPass").value = "";
 }
 
 async function setChips() {
-  await fetch("/admin/set-chips", {
+  const username = document.getElementById("chipUser").value.trim();
+  const chips = parseInt(document.getElementById("chipAmount").value, 10);
+
+  if (!username || isNaN(chips)) {
+    alert("Datos inválidos");
+    return;
+  }
+
+  const res = await fetch("/admin/set-chips", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: chipuser.value, chips: Number(chipamt.value) })
+    credentials: "include",
+    body: JSON.stringify({ username, chips })
   });
-  alert("Fichas asignadas");
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    alert("Error al cargar fichas");
+    return;
+  }
+
+  alert("Fichas actualizadas");
 }
