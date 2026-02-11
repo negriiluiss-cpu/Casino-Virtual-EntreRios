@@ -68,3 +68,8 @@ app.post("/spin", (req, res) => {
   const { bet } = req.body;
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(req.session.user.id);
   if (user.chips < bet) return res.status(400).json({ ok:
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Casino Virtual EntreRios corriendo en puerto " + PORT);
+});
