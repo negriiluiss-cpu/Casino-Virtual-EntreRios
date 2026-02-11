@@ -67,7 +67,20 @@ app.post("/spin", (req, res) => {
   if (!req.session.user) return res.sendStatus(401);
   const { bet } = req.body;
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(req.session.user.id);
-  if (user.chips < bet) return res.status(400).json({ ok:
+
+  if (user.chips < bet) {
+    return res.status(400).json({ ok: false, msg: "No tenés fichas suficientes" });
+  }
+
+  const win = Math.random() < 0.3; // 30% de probabilidad de ganar
+  const delta = win ? bet : -bet;
+
+  db.prepare("UPDATE users SET chips = chips + ? WHERE id = ?")
+    .run(delta, user.id);
+
+  res.json({ ok: true, win, delta });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
