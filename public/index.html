@@ -1,49 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Casino Virtual EntreRios</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <h1>🎰 Casino Virtual EntreRios</h1>
 
-  <section id="login">
-    <input id="u" placeholder="Usuario" />
-    <input id="p" type="password" placeholder="Contraseña" />
+  <div id="login">
+    <h2>Login</h2>
+    <input id="username" placeholder="Usuario" />
+    <input id="password" type="password" placeholder="Contraseña" />
     <button onclick="login()">Entrar</button>
-    <p id="err"></p>
-  </section>
+  </div>
 
-  <section id="app" hidden>
-    <p>Usuario: <b id="user"></b> | Fichas: <b id="chips"></b></p>
+  <div id="game" style="display:none;">
+    <h2>Tragamonedas</h2>
 
-    <div class="slot">
-      <select id="theme">
-        <option>Clásico</option><option>Frutas</option><option>Egipcio</option><option>Vikingos</option>
-        <option>Piratas</option><option>Espacio</option><option>Cyberpunk</option><option>Terror</option>
-        <option>Fútbol</option><option>Anime</option><option>Dragones</option><option>Mafiosos</option>
-        <option>Western</option><option>Playa</option><option>Dioses griegos</option><option>Superhéroes</option>
-        <option>Memes</option><option>Dinosaurios</option><option>Medieval</option><option>VIP</option>
-      </select>
-      <input id="bet" type="number" value="10" min="1" />
-      <button onclick="spin()">Girar</button>
-      <p id="result"></p>
+    <p>Fichas: <strong><span id="chips">0</span></strong></p>
+
+    <select id="theme"></select><br/>
+
+    <input id="bet" type="number" placeholder="Apuesta" />
+    <button onclick="spin()">Girar 🎰</button>
+
+    <div id="result" style="margin:10px 0;"></div>
+
+    <div id="admin" style="display:none; margin-top:20px;">
+      <h3>Panel Admin</h3>
+
+      <input id="newUser" placeholder="Nuevo usuario" />
+      <input id="newPass" type="password" placeholder="Contraseña" />
+      <button onclick="createUser()">Crear usuario</button>
+
+      <br/><br/>
+
+      <input id="chipUser" placeholder="Usuario" />
+      <input id="chipAmount" type="number" placeholder="Fichas" />
+      <button onclick="setChips()">Cargar fichas</button>
     </div>
+  </div>
 
-    <section id="admin" hidden>
-      <h2>Panel Admin</h2>
-      <input id="newu" placeholder="Nuevo usuario" />
-      <input id="newp" placeholder="Clave" />
-      <button onclick="createUser()">Crear</button>
-
-      <input id="chipuser" placeholder="Usuario" />
-      <input id="chipamt" type="number" placeholder="Fichas" />
-      <button onclick="setChips()">Asignar fichas</button>
-    </section>
-  </section>
-
-  <script src="/app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
