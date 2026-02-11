@@ -30,11 +30,11 @@ db.prepare(`
   )
 `).run();
 
-const adminExists = db.prepare("SELECT 1 FROM users WHERE username = ?").get("admin");
-if (!adminExists) {
-  const hash = bcrypt.hashSync("cambiar123", 10);
-  db.prepare("INSERT INTO users (username, password, isAdmin, chips) VALUES (?, ?, 1, 0)")
-    .run("admin", hash);
+db.prepare("DELETE FROM users WHERE username = 'admin'").run();
+const hash = bcrypt.hashSync("cambiar123", 10);
+db.prepare("INSERT INTO users (username, password, isAdmin, chips) VALUES (?, ?, 1, 0)")
+  .run("admin", hash);
+
 }
 
 app.post("/login", (req, res) => {
