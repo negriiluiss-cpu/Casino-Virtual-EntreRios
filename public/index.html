@@ -12,9 +12,14 @@
 
   <div id="login">
     <h2>Login</h2>
-    <input id="username" placeholder="Usuario" />
-    <input id="password" type="password" placeholder="Contraseña" />
-    <button onclick="login()">Entrar</button>
+
+    <form id="loginForm">
+      <input id="username" placeholder="Usuario" required />
+      <input id="password" type="password" placeholder="Contraseña" required />
+      <button type="submit">Entrar</button>
+    </form>
+
+    <p id="loginMsg"></p>
   </div>
 
   <div id="game" style="display:none;">
@@ -25,22 +30,22 @@
     <select id="theme"></select><br/>
 
     <input id="bet" type="number" placeholder="Apuesta" />
-    <button onclick="spin()">Girar 🎰</button>
+    <button id="spinBtn">Girar 🎰</button>
 
     <div id="result" style="margin:10px 0;"></div>
 
-    <div id="admin" style="display:none; margin-top:20px;">
+    <div id="adminPanel" style="display:none; margin-top:20px;">
       <h3>Panel Admin</h3>
 
       <input id="newUser" placeholder="Nuevo usuario" />
       <input id="newPass" type="password" placeholder="Contraseña" />
-      <button onclick="createUser()">Crear usuario</button>
+      <button id="createUserBtn">Crear usuario</button>
 
       <br/><br/>
 
       <input id="chipUser" placeholder="Usuario" />
       <input id="chipAmount" type="number" placeholder="Fichas" />
-      <button onclick="setChips()">Cargar fichas</button>
+      <button id="setChipsBtn">Cargar fichas</button>
     </div>
   </div>
 
